@@ -1,0 +1,21 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+  <meta charset="UTF-8">
+  <title>Generate Link</title>
+</head>
+<body>
+
+<button onclick="generate()">Buat Link</button>
+<input id="hasil" readonly>
+
+<script>
+async function generate() {
+  const res = await fetch('/api/generate');
+  const data = await res.json();
+  document.getElementById('hasil').value = data.link;
+}
+</script>
+
+</body>
+</html>
