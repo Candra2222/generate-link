@@ -5,6 +5,6 @@ export default function handler(req, res) {
     kode += chars[Math.floor(Math.random() * chars.length)];
   }
 
-  const link = `https://profound-nasturtium-68c219.netlify.app/?${kode}`;
+  const link = `https://generate-link-blond.vercel.app/?${kode}`;
   res.status(200).json({ link });
 }
