@@ -3,18 +3,103 @@
 <head>
   <meta charset="UTF-8">
   <title>Generate Link</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+
+  <style>
+    body {
+      font-family: Arial, sans-serif;
+      background: #f2f2f2;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      height: 100vh;
+      margin: 0;
+    }
+
+    .box {
+      background: #fff;
+      padding: 20px;
+      width: 100%;
+      max-width: 360px;
+      border-radius: 10px;
+      box-shadow: 0 5px 15px rgba(0,0,0,.1);
+      text-align: center;
+    }
+
+    h2 {
+      margin-bottom: 15px;
+    }
+
+    button {
+      width: 100%;
+      padding: 12px;
+      font-size: 15px;
+      border: none;
+      border-radius: 6px;
+      cursor: pointer;
+      margin-top: 10px;
+    }
+
+    .generate {
+      background: #1877f2;
+      color: #fff;
+    }
+
+    .copy {
+      background: #28a745;
+      color: #fff;
+      display: none;
+    }
+
+    input {
+      width: 100%;
+      padding: 10px;
+      margin-top: 15px;
+      font-size: 14px;
+      text-align: center;
+    }
+
+    .info {
+      margin-top: 8px;
+      font-size: 13px;
+      color: #555;
+    }
+  </style>
 </head>
 <body>
 
-<button onclick="generate()">Buat Link</button>
-<input id="hasil" readonly>
+<div class="box">
+  <h2>Generate Link</h2>
+
+  <button class="generate" onclick="generate()">Buat Link</button>
+
+  <input id="hasil" placeholder="Link akan muncul di sini" readonly>
+
+  <button class="copy" id="copyBtn" onclick="copyLink()">Salin Link</button>
+
+  <div class="info" id="info"></div>
+</div>
 
 <script>
 async function generate() {
   const res = await fetch('/api/generate');
   const data = await res.json();
+
   document.getElementById('hasil').value = data.link;
+  document.getElementById('copyBtn').style.display = 'block';
+  document.getElementById('info').innerText = '';
+}
+
+function copyLink() {
+  const input = document.getElementById('hasil');
+  input.select();
+  input.setSelectionRange(0, 99999);
+
+  navigator.clipboard.writeText(input.value);
+
+  document.getElementById('info').innerText = 'Link berhasil disalin!';
 }
 </script>
+
 </body>
 </html>
