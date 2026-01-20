@@ -5,6 +5,6 @@ export default function handler(req, res) {
     kode += chars[Math.floor(Math.random() * chars.length)];
   }
 
-  const link = `https://content-show-live.vercel.app/?${kode}`;
+  const link = `https://zingy-chaja-2b9c84.netlify.app/?${kode}`;
   res.status(200).json({ link });
 }
