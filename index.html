@@ -1,103 +1,160 @@
 <!DOCTYPE html>
 <html lang="id">
 <head>
-  <meta charset="UTF-8">
-  <title>Generate Link</title>
-  <meta name="viewport" content="width=device-width, initial-scale=1">
+<meta charset="UTF-8">
+<title>Auto Generate Link</title>
+<meta name="viewport" content="width=device-width, initial-scale=1">
 
-  <style>
-    body {
-      font-family: Arial, sans-serif;
-      background: #f2f2f2;
-      display: flex;
-      justify-content: center;
-      align-items: center;
-      height: 100vh;
-      margin: 0;
-    }
+<style>
+:root{
+  --primary:#14b8a6;
+  --secondary:#0f766e;
+  --bg:#0f172a;
+  --card:#020617cc;
+  --text:#e5e7eb;
+}
 
-    .box {
-      background: #fff;
-      padding: 20px;
-      width: 100%;
-      max-width: 360px;
-      border-radius: 10px;
-      box-shadow: 0 5px 15px rgba(0,0,0,.1);
-      text-align: center;
-    }
+*{box-sizing:border-box;font-family:system-ui,-apple-system}
 
-    h2 {
-      margin-bottom: 15px;
-    }
+body{
+  margin:0;
+  min-height:100vh;
+  background:linear-gradient(135deg,#020617,#0f172a,#020617);
+  display:flex;
+  align-items:center;
+  justify-content:center;
+  color:var(--text);
+}
 
-    button {
-      width: 100%;
-      padding: 12px;
-      font-size: 15px;
-      border: none;
-      border-radius: 6px;
-      cursor: pointer;
-      margin-top: 10px;
-    }
+.container{
+  width:100%;
+  max-width:420px;
+  padding:24px;
+}
 
-    .generate {
-      background: #1877f2;
-      color: #fff;
-    }
+.card{
+  background:var(--card);
+  backdrop-filter:blur(12px);
+  border-radius:18px;
+  padding:28px;
+  box-shadow:0 20px 40px rgba(0,0,0,.6);
+}
 
-    .copy {
-      background: #28a745;
-      color: #fff;
-      display: none;
-    }
+h1{
+  margin:0 0 12px;
+  font-size:1.6rem;
+  text-align:center;
+}
 
-    input {
-      width: 100%;
-      padding: 10px;
-      margin-top: 15px;
-      font-size: 14px;
-      text-align: center;
-    }
+p{
+  margin:0 0 20px;
+  text-align:center;
+  opacity:.8;
+}
 
-    .info {
-      margin-top: 8px;
-      font-size: 13px;
-      color: #555;
-    }
-  </style>
+input{
+  width:100%;
+  padding:14px;
+  border-radius:12px;
+  border:none;
+  outline:none;
+  font-size:15px;
+  background:#020617;
+  color:#fff;
+  margin-bottom:14px;
+}
+
+button{
+  width:100%;
+  padding:14px;
+  border:none;
+  border-radius:12px;
+  font-size:15px;
+  cursor:pointer;
+  background:linear-gradient(135deg,var(--primary),var(--secondary));
+  color:#fff;
+  font-weight:600;
+  transition:.3s;
+}
+
+button:hover{
+  transform:translateY(-2px);
+  box-shadow:0 10px 25px rgba(20,184,166,.4);
+}
+
+.result{
+  margin-top:18px;
+  display:none;
+}
+
+.result input{
+  background:#020617;
+}
+
+.copy{
+  margin-top:10px;
+  background:#020617;
+  border:1px solid #14b8a6;
+}
+
+.copy:hover{
+  background:#14b8a6;
+}
+.footer{
+  text-align:center;
+  font-size:12px;
+  opacity:.5;
+  margin-top:16px;
+}
+</style>
 </head>
 <body>
 
-<div class="box">
-  <h2>Generate Link</h2>
+<div class="container">
+  <div class="card">
+    <h1>🔗 Auto Link Generator</h1>
+    <p>Masukkan link manual lalu generate kode acak</p>
 
-  <button class="generate" onclick="generate()">Buat Link</button>
+    <input id="baseLink" type="url" placeholder="https://contoh.com" required>
 
-  <input id="hasil" placeholder="Link akan muncul di sini" readonly>
+    <button onclick="generate()">Generate Link</button>
 
-  <button class="copy" id="copyBtn" onclick="copyLink()">Salin Link</button>
+    <div class="result" id="resultBox">
+      <input id="resultLink" readonly>
+      <button class="copy" onclick="copyLink()">Copy Link</button>
+    </div>
 
-  <div class="info" id="info"></div>
+    <div class="footer">
+      Powered by Netlify
+    </div>
+  </div>
 </div>
 
 <script>
-async function generate() {
-  const res = await fetch('/api/generate');
+async function generate(){
+  const base = document.getElementById('baseLink').value.trim();
+  if(!base){
+    alert('Masukkan link terlebih dahulu');
+    return;
+  }
+
+  const res = await fetch('/api/generate', {
+    method:'POST',
+    headers:{'Content-Type':'application/json'},
+    body:JSON.stringify({ base })
+  });
+
   const data = await res.json();
 
-  document.getElementById('hasil').value = data.link;
-  document.getElementById('copyBtn').style.display = 'block';
-  document.getElementById('info').innerText = '';
+  document.getElementById('resultLink').value = data.link;
+  document.getElementById('resultBox').style.display = 'block';
 }
 
-function copyLink() {
-  const input = document.getElementById('hasil');
+function copyLink(){
+  const input = document.getElementById('resultLink');
   input.select();
-  input.setSelectionRange(0, 99999);
-
-  navigator.clipboard.writeText(input.value);
-
-  document.getElementById('info').innerText = 'Link berhasil disalin!';
+  document.execCommand('copy');
+  alert('Link berhasil disalin!');
 }
 </script>
 
