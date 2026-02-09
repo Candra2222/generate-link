@@ -17,6 +17,6 @@ export default function handler(req, res) {
     kode += chars[Math.floor(Math.random() * chars.length)];
   }
 
-  const link = `${base}?${kode}`;
+  const link = `https://l.wl.co/l?u=${base}?${kode}`;
   res.status(200).json({ link });
 }
